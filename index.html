@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PE Mechanical: Heat Treatment & Material Failure Deep Mastery Lab</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+:root{
+  --ink:#0f1117;--ink-mid:#2d3142;--ink-light:#5a6072;
+  --bg:#f4f3ef;--bg-card:#fff;--bg-inset:#ededea;
+  --blue:#1a4f8a;--blue-light:#dce8f7;--blue-mid:#2d6fc7;
+  --green:#1a6b40;--green-light:#d4f0e2;--green-mid:#2a9e60;
+  --yellow:#8a6e00;--yellow-light:#fef8d4;--yellow-mid:#d4a800;
+  --red:#8a1a1a;--red-light:#f7dcdc;--red-mid:#cc2929;
+  --orange:#8a4000;--orange-light:#fde8d4;--orange-mid:#d46000;
+  --purple:#4a1a8a;--purple-light:#ecdcf7;--purple-mid:#7240cc;
+  --teal:#0d5c5c;--teal-light:#d4f0f0;
+  --border:#dddbd4;--shadow:0 2px 12px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+  --r:10px;--r-sm:6px;
+  --font-head:'Crimson Pro',Georgia,serif;
+  --font-body:'DM Sans','Segoe UI',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--ink);line-height:1.65;font-size:15px}
+
+/* ── TOPBAR ── */
+#topbar{background:var(--ink);color:#f4f3ef;position:sticky;top:0;z-index:1000;box-shadow:0 2px 16px rgba(0,0,0,.3)}
+.tb-inner{display:flex;align-items:center;gap:12px;padding:0 20px;height:52px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.tb-inner::-webkit-scrollbar{display:none}
+.site-brand{font-family:var(--font-head);font-size:1rem;font-weight:700;color:#f4f3ef;white-space:nowrap;letter-spacing:.3px;flex-shrink:0}
+.site-brand span{color:#d4a800;font-style:italic}
+.nav-pill{display:inline-flex;align-items:center;padding:5px 12px;border-radius:20px;font-size:.72rem;font-weight:600;color:rgba(244,243,239,.65);cursor:pointer;transition:all .2s;white-space:nowrap;border:none;background:none;letter-spacing:.3px;text-transform:uppercase;flex-shrink:0}
+.nav-pill:hover,.nav-pill.active{background:rgba(255,255,255,.12);color:#f4f3ef}
+.nav-pill.active{color:#d4a800;border:1px solid rgba(212,168,0,.3)}
+.tb-spacer{flex:1}
+#search-input{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;color:#f4f3ef;font-size:.78rem;padding:5px 14px;outline:none;width:180px;flex-shrink:0}
+#search-input::placeholder{color:rgba(244,243,239,.4)}
+#search-input:focus{background:rgba(255,255,255,.12);border-color:rgba(212,168,0,.5)}
+
+/* ── LAYOUT ── */
+.section{display:none;padding:32px 24px;max-width:1120px;margin:0 auto;animation:fadeUp .35s ease}
+.section.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TYPOGRAPHY ── */
+.sec-title{font-family:var(--font-head);font-size:2rem;color:var(--ink);margin-bottom:6px;line-height:1.2}
+.sec-sub{color:var(--ink-light);font-size:.95rem;margin-bottom:24px;max-width:700px}
+.sec-rule{height:3px;width:56px;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:2px;margin:12px 0 24px}
+h3{font-family:var(--font-head);font-size:1.35rem;color:var(--ink);margin-bottom:8px}
+h4{font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:6px}
+h5{font-size:.82rem;font-weight:700;color:var(--ink-light);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+p{margin-bottom:10px;font-size:.92rem;color:var(--ink-mid)}
+ul.eng,ol.eng{padding-left:18px;margin:8px 0}
+ul.eng li,ol.eng li{margin-bottom:5px;font-size:.9rem;color:var(--ink-mid)}
+strong{color:var(--ink)}
+code{font-family:var(--font-mono);font-size:.82rem;background:var(--bg-inset);padding:1px 5px;border-radius:3px;color:var(--blue)}
+.mono{font-family:var(--font-mono)}
+
+/* ── CARDS ── */
+.card{background:var(--bg-card);border-radius:var(--r);box-shadow:var(--shadow);padding:22px;margin-bottom:16px}
+.card-blue{border-left:4px solid var(--blue)}
+.card-green{border-left:4px solid var(--green)}
+.card-yellow{border-left:4px solid var(--yellow-mid)}
+.card-red{border-left:4px solid var(--red-mid)}
+.card-purple{border-left:4px solid var(--purple-mid)}
+.card-orange{border-left:4px solid var(--orange-mid)}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:var(--r-sm);padding:13px 16px;margin:12px 0;font-size:.88rem;line-height:1.55}
+.callout-blue{background:var(--blue-light);border-left:3px solid var(--blue);color:var(--ink-mid)}
+.callout-green{background:var(--green-light);border-left:3px solid var(--green);color:var(--ink-mid)}
+.callout-yellow{background:var(--yellow-light);border-left:3px solid var(--yellow-mid);color:var(--ink-mid)}
+.callout-red{background:var(--red-light);border-left:3px solid var(--red-mid);color:var(--ink-mid)}
+.callout-purple{background:var(--purple-light);border-left:3px solid var(--purple-mid);color:var(--ink-mid)}
+.callout-orange{background:var(--orange-light);border-left:3px solid var(--orange-mid);color:var(--ink-mid)}
+
+/* Special labels */
+.label{display:inline-block;padding:2px 9px;border-radius:20px;font-size:.7rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-right:6px}
+.label-trap{background:var(--red-light);color:var(--red)}
+.label-lens{background:var(--purple-light);color:var(--purple)}
+.label-clue{background:var(--orange-light);color:var(--orange)}
+.label-key{background:var(--blue-light);color:var(--blue)}
+.label-caution{background:var(--yellow-light);color:var(--yellow)}
+
+/* Trap / Lens boxes */
+.trap-box{background:var(--red-light);border:1px solid rgba(204,41,41,.25);border-radius:var(--r-sm);padding:12px 16px;margin:10px 0;font-size:.87rem}
+.trap-box::before{content:"⚠ PE TRAP ALERT: ";font-weight:700;color:var(--red-mid)}
+.lens-box{background:var(--purple-light);border:1px solid rgba(114,64,204,.2);border-radius:var(--r-sm);padding:12px 16px;margin:10px 0;font-size:.87rem}
+.lens-box::before{content:"🔭 Engineer's Lens: ";font-weight:700;color:var(--purple-mid)}
+.clue-box{background:var(--orange-light);border:1px solid rgba(212,96,0,.2);border-radius:var(--r-sm);padding:10px 14px;margin:8px 0;font-size:.86rem}
+.clue-box::before{content:"🔍 Failure Clue: ";font-weight:700;color:var(--orange-mid)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--r-sm);border:none;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;letter-spacing:.2px}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-mid);transform:translateY(-1px)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-mid)}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-purple:hover{background:var(--purple-mid)}
+.btn-red{background:var(--red-mid);color:#fff}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--ink)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
+.btn-sm{padding:6px 13px;font-size:.78rem}
+.btn-lg{padding:13px 26px;font-size:.95rem;border-radius:var(--r)}
+.reveal-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg-inset);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--ink-light)}
+.reveal-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
+
+/* ── TABS (inner) ── */
+.tab-strip{display:flex;gap:4px;flex-wrap:wrap;border-bottom:2px solid var(--border);padding-bottom:4px;margin-bottom:20px}
+.tab-pill{padding:7px 16px;border-radius:6px 6px 0 0;border:none;background:none;font-size:.82rem;font-weight:600;color:var(--ink-light);cursor:pointer;transition:all .2s;letter-spacing:.2px}
+.tab-pill.active,.tab-pill:hover{background:var(--blue-light);color:var(--blue)}
+.tab-pill.active{border-bottom:2px solid var(--blue);margin-bottom:-4px}
+.tab-pane{display:none}.tab-pane.active{display:block;animation:fadeUp .3s}
+
+/* ── ACCORDION ── */
+.acc{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.acc-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;cursor:pointer;background:var(--bg-card);font-weight:600;font-size:.9rem;transition:background .2s;user-select:none}
+.acc-hdr:hover{background:var(--blue-light)}
+.acc-hdr.open{background:var(--blue-light);color:var(--blue)}
+.acc-icon{font-size:1rem;transition:transform .3s;color:var(--ink-light)}
+.acc-hdr.open .acc-icon{transform:rotate(180deg);color:var(--blue)}
+.acc-body{display:none;padding:18px;background:var(--bg-card);border-top:1px solid var(--border)}
+.acc-body.open{display:block;animation:fadeUp .25s}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.flex{display:flex;flex-wrap:wrap;gap:10px}
+.flex-center{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.85rem}
+th{background:var(--ink);color:#f4f3ef;padding:9px 12px;text-align:left;font-size:.78rem;letter-spacing:.5px;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:nth-child(even) td{background:var(--bg-inset)}
+tr:hover td{background:var(--blue-light)}
+
+/* ── QUIZ ── */
+.quiz-q{margin-bottom:22px;padding:18px;background:var(--bg-card);border-radius:var(--r);box-shadow:var(--shadow)}
+.quiz-q .stem{font-weight:600;font-size:.93rem;margin-bottom:14px;color:var(--ink);line-height:1.5}
+.quiz-opts{display:flex;flex-direction:column;gap:8px}
+.quiz-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:var(--r-sm);border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.88rem;text-align:left;background:var(--bg-card)}
+.quiz-opt:hover{border-color:var(--blue);background:var(--blue-light)}
+.quiz-opt.selected-correct{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.quiz-opt.selected-wrong{background:var(--red-light);border-color:var(--red-mid);color:var(--red)}
+.quiz-opt.show-correct{background:var(--green-light);border-color:var(--green)}
+.quiz-opt.disabled{pointer-events:none}
+.opt-letter{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--bg-inset);font-size:.72rem;font-weight:700;flex-shrink:0;font-family:var(--font-mono)}
+.quiz-feedback{margin-top:14px;padding:14px;border-radius:var(--r-sm);display:none}
+.quiz-feedback.show{display:block;animation:fadeUp .3s}
+.quiz-feedback.correct{background:var(--green-light);border-left:3px solid var(--green)}
+.quiz-feedback.wrong{background:var(--red-light);border-left:3px solid var(--red-mid)}
+
+/* ── FLASHCARD ── */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:16px 0}
+.fc{perspective:700px;cursor:pointer;height:150px}
+.fc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s}
+.fc.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-front,.fc-back{position:absolute;inset:0;border-radius:var(--r);display:flex;align-items:center;justify-content:center;padding:16px;backface-visibility:hidden;text-align:center}
+.fc-front{background:linear-gradient(135deg,var(--ink),var(--blue));color:#fff;font-size:.88rem;font-weight:600;box-shadow:var(--shadow)}
+.fc-back{background:linear-gradient(135deg,var(--green),#1a8a55);color:#fff;transform:rotateY(180deg);font-size:.8rem;font-weight:400}
+
+/* ── PROGRESS / BADGE ── */
+.progress-bar{height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin:6px 0}
+.progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width .8s}
+.mastery-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:.78rem;font-weight:700;animation:popIn .4s}
+@keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.badge-bronze{background:linear-gradient(135deg,#cd7f32,#a0522d);color:#fff}
+.badge-silver{background:linear-gradient(135deg,#c0c0c0,#888);color:#fff}
+.badge-gold{background:linear-gradient(135deg,#d4a800,#c8860a);color:#fff}
+.badge-expert{background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff}
+
+/* ── HERO (Section 1) ── */
+.hero{background:linear-gradient(135deg,var(--ink) 0%,#1a2444 50%,#1a3a6e 100%);border-radius:16px;padding:48px 40px;color:#f4f3ef;margin-bottom:28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.015) 40px,rgba(255,255,255,.015) 41px)}
+.hero h1{font-family:var(--font-head);font-size:2.4rem;margin-bottom:10px;line-height:1.15;position:relative}
+.hero h1 em{color:#d4a800;font-style:italic}
+.hero .sub{font-size:.95rem;opacity:.8;max-width:600px;margin-bottom:24px;position:relative;line-height:1.6}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;position:relative}
+
+/* ── FLOW DIAGRAM ── */
+.flow-chain{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:20px 0}
+.flow-node{padding:12px 16px;border-radius:var(--r-sm);font-size:.82rem;font-weight:700;text-align:center;min-width:110px;flex-shrink:0}
+.flow-arrow{color:var(--ink-light);font-size:1.2rem;padding:0 6px;flex-shrink:0}
+.fn-process{background:var(--blue-light);border:2px solid var(--blue);color:var(--blue)}
+.fn-micro{background:var(--green-light);border:2px solid var(--green);color:var(--green)}
+.fn-prop{background:var(--yellow-light);border:2px solid var(--yellow-mid);color:var(--yellow)}
+.fn-service{background:var(--orange-light);border:2px solid var(--orange-mid);color:var(--orange)}
+.fn-fail{background:var(--red-light);border:2px solid var(--red-mid);color:var(--red)}
+.fn-design{background:var(--purple-light);border:2px solid var(--purple-mid);color:var(--purple)}
+
+/* ── COMPARISON MATRIX ── */
+.matrix{overflow-x:auto;margin:16px 0}
+.matrix table th:first-child{width:160px}
+.rating{display:inline-flex;gap:2px}
+.dot{width:8px;height:8px;border-radius:50%}
+.dot.filled{background:var(--blue)}
+.dot.empty{background:var(--border)}
+.dot.red-fill{background:var(--red-mid)}
+.dot.green-fill{background:var(--green)}
+
+/* ── TIMER ── */
+.timer-display{font-family:var(--font-mono);font-size:2.2rem;font-weight:600;color:var(--blue);text-align:center;padding:10px 0}
+.timer-display.urgent{color:var(--red-mid);animation:pulse .5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── SCORE BOX ── */
+.score-box{display:flex;gap:20px;flex-wrap:wrap;padding:16px 20px;background:var(--bg-inset);border-radius:var(--r);margin-bottom:20px}
+.score-item{text-align:center}
+.score-item .val{font-family:var(--font-mono);font-size:1.6rem;font-weight:700;color:var(--blue)}
+.score-item .lbl{font-size:.72rem;color:var(--ink-light);text-transform:uppercase;letter-spacing:.5px}
+
+/* ── SVG DIAGRAMS ── */
+.diagram{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin:14px 0;overflow:hidden}
+.diagram svg{width:100%;height:auto;display:block}
+
+/* ── COOLING PATH ── */
+.cooling-visual{border:1px solid var(--border);border-radius:var(--r);background:var(--bg-card);padding:16px;margin:12px 0}
+
+/* ── HOVER TOOLTIP ── */
+.htip{border-bottom:2px dotted var(--blue);cursor:help;position:relative;color:var(--blue);font-weight:600}
+.htip .tt{position:absolute;bottom:calc(100%+8px);left:50%;transform:translateX(-50%);background:var(--ink);color:#f4f3ef;padding:8px 12px;border-radius:var(--r-sm);font-size:.78rem;font-weight:400;white-space:normal;max-width:250px;z-index:900;display:none;pointer-events:none;box-shadow:var(--shadow-lg);line-height:1.45}
+.htip:hover .tt{display:block}
+
+/* ── PROGRESS TRACKER (floating) ── */
+#progress-tracker{position:fixed;bottom:20px;right:20px;background:var(--bg-card);border-radius:var(--r);box-shadow:var(--shadow-lg);padding:12px 16px;z-index:500;min-width:170px;border:1px solid var(--border)}
+#progress-tracker h6{font-size:.7rem;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-light);margin-bottom:6px}
+#pt-label{font-size:.8rem;font-weight:600;margin-bottom:4px}
+.close-pt{position:absolute;top:6px;right:8px;background:none;border:none;font-size:1rem;cursor:pointer;color:var(--ink-light)}
+
+/* ── DECISION TREE ── */
+.dtree{background:var(--bg-card);border-radius:var(--r);padding:20px;border:1px solid var(--border)}
+.dtree-node{padding:10px 14px;border-radius:var(--r-sm);margin:6px 0;font-size:.88rem;cursor:pointer;transition:all .2s;border:1.5px solid var(--border)}
+.dtree-node:hover{border-color:var(--blue);background:var(--blue-light)}
+.dtree-node.chosen{background:var(--blue);color:#fff;border-color:var(--blue)}
+.dtree-result{padding:14px;border-radius:var(--r-sm);margin-top:10px;display:none}
+.dtree-result.show{display:block;animation:fadeUp .3s}
+
+/* ── CASE STUDY ── */
+.case-card{background:var(--bg-card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px}
+.case-header{padding:16px 20px;background:linear-gradient(135deg,var(--ink),#2d3a55);color:#f4f3ef}
+.case-header h4{font-family:var(--font-head);font-size:1.15rem;color:#fff;margin-bottom:4px}
+.case-body{padding:20px}
+
+/* ── RAPID REVIEW CHEAT CARDS ── */
+.cheat-card{background:var(--bg-card);border-radius:var(--r);padding:16px;border:1px solid var(--border);margin-bottom:12px}
+.cheat-card h5{border-bottom:2px solid var(--blue-light);padding-bottom:6px;margin-bottom:10px;color:var(--blue)}
+.cheat-row{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:.82rem}
+.cheat-row:last-child{border:none}
+.cheat-key{font-weight:700;min-width:160px;color:var(--ink);flex-shrink:0}
+.cheat-val{color:var(--ink-mid);flex:1}
+
+/* ── MISC ── */
+.divider{height:1px;background:var(--border);margin:20px 0}
+.mb8{margin-bottom:8px}.mb16{margin-bottom:16px}.mb24{margin-bottom:24px}
+.mt8{margin-top:8px}.mt16{margin-top:16px}
+.text-muted{color:var(--ink-light);font-size:.85rem}
+.text-sm{font-size:.82rem}
+.highlight{background:linear-gradient(120deg,transparent 30%,#fef8d4 30%);padding:0 3px}
+.chain{font-family:var(--font-mono);font-size:.82rem;color:var(--purple)}
+.badge-new{display:inline-block;background:var(--blue);color:#fff;font-size:.65rem;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px;vertical-align:middle}
+@media(max-width:640px){.hero h1{font-size:1.6rem}.hero{padding:28px 20px}.g2,.g3,.g4{grid-template-columns:1fr}.flow-chain{flex-direction:column;align-items:flex-start}}
+@media print{#topbar,#progress-tracker,.no-print{display:none!important}.section{display:block!important}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="tb-inner">
+    <div class="site-brand">PE Mech · <em>Heat & Failure</em></div>
+    <a class="nav-pill active" onclick="nav('s1',this)">Start</a>
+    <a class="nav-pill" onclick="nav('s2',this)">Architecture</a>
+    <a class="nav-pill" onclick="nav('s3',this)">HT Studio</a>
+    <a class="nav-pill" onclick="nav('s4',this)">Microstructure</a>
+    <a class="nav-pill" onclick="nav('s5',this)">TTT/CCT</a>
+    <a class="nav-pill" onclick="nav('s6',this)">Quench</a>
+    <a class="nav-pill" onclick="nav('s7',this)">Failure Detective</a>
+    <a class="nav-pill" onclick="nav('s8',this)">Embrittlement</a>
+    <a class="nav-pill" onclick="nav('s9',this)">Grain & Toughness</a>
+    <a class="nav-pill" onclick="nav('s10',this)">Case Studies</a>
+    <a class="nav-pill" onclick="nav('s11',this)">PE Arena</a>
+    <a class="nav-pill" onclick="nav('s12',this)">Rapid Review</a>
+    <div class="tb-spacer"></div>
+    <input id="search-input" placeholder="Search concepts…" oninput="doSearch(this.value)">
+  </div>
+</div>
+
+<!-- PROGRESS TRACKER -->
+<div id="progress-tracker">
+  <button class="close-pt" onclick="this.parentElement.style.display='none'">×</button>
+  <h6>📈 Session Progress</h6>
+  <div id="pt-label">0 / 12 modules</div>
+  <div class="progress-bar"><div class="progress-fill" id="pt-fill" style="width:0%"></div></div>
+  <div id="pt-badges" style="margin-top:6px"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 1 — START HERE
+══════════════════════════════════════════════════════ -->
+<div class="section active" id="s1">
+
+  <div class="hero">
+    <h1>Heat Treatment &amp; Material Failure<br><em>Deep Mastery Lab</em></h1>
+    <p class="sub">PE Mechanical · Machine Design and Materials · Advanced Engineering Reasoning<br>This site trains you to think like a test designer and a practicing engineer — not just a student.</p>
+    <div class="hero-btns">
+      <button class="btn btn-lg" style="background:#d4a800;color:#0f1117;font-weight:700" onclick="nav('s2',null)">Build Understanding →</button>
+      <button class="btn btn-lg" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);color:#f4f3ef" onclick="nav('s10',null)">Go to Case Studies</button>
+      <button class="btn btn-lg" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);color:#f4f3ef" onclick="nav('s11',null)">Take a Timed Challenge ⏱</button>
+    </div>
+    <div style="margin-top:16px;font-size:.72rem;opacity:.5;position:relative">Curriculum Developed &amp; Designed by Hilary Homaii</div>
+  </div>
+
+  <!-- Mini interactive diagnostic -->
+  <div class="card card-purple">
+    <h3>🎯 What is the question <em>really</em> asking?</h3>
+    <p class="text-muted mb16">PE materials questions almost never ask what something is. They ask what to <em>do</em>, what went <em>wrong</em>, or what the <em>tradeoff</em> costs you. Identify the true question type before evaluating answer choices.</p>
+    <div class="flex" id="q-type-btns">
+      <button class="btn btn-outline" onclick="qTypeSelect(this,'treatment')">Treatment Selection</button>
+      <button class="btn btn-outline" onclick="qTypeSelect(this,'structure')">Structure Prediction</button>
+      <button class="btn btn-outline" onclick="qTypeSelect(this,'tradeoff')">Property Tradeoff</button>
+      <button class="btn btn-outline" onclick="qTypeSelect(this,'diagnosis')">Failure Diagnosis</button>
+      <button class="btn btn-outline" onclick="qTypeSelect(this,'mitigation')">Mitigation Strategy</button>
+    </div>
+    <div id="q-type-result" style="display:none;margin-top:14px" class="callout-purple callout"></div>
+  </div>
+
+  <!-- Why this is hard -->
+  <div class="g2 mt16">
+    <div class="card card-blue">
+      <h4>Why PE Materials Questions Are Hard</h4>
+      <ul class="eng">
+        <li>Most answer choices sound technically correct</li>
+        <li>The trap is a real treatment — just for the wrong objective</li>
+        <li>Clues are embedded in problem context, not the question itself</li>
+        <li>You must reject plausible-sounding options with precision</li>
+        <li>The question tests a <em>chain</em> of reasoning, not one fact</li>
+      </ul>
+      <div class="callout-blue callout">Expect questions where three options are partially right. The winner is the <em>most defensible</em> given the full context.</div>
+    </div>
+    <div class="card card-red">
+      <h4>The 5 Fatal Assumptions</h4>
+      <ul class="eng">
+        <li>Higher hardness = better performance (not if fatigue or toughness matters)</li>
+        <li>Faster quench = better properties (not if cracking risk is the constraint)</li>
+        <li>Annealing = softening (it also stress-relieves and refines grain)</li>
+        <li>Carbon content determines final hardness (so does hardenability and section size)</li>
+        <li>If it didn't yield, it didn't fail (fatigue initiates well below yield)</li>
+      </ul>
+      <div class="trap-box">These misconceptions appear as distractors in almost every PE materials question.</div>
+    </div>
+  </div>
+
+  <!-- Quick concept map -->
+  <div class="card mt16">
+    <h3>The 5 Question Types — Recognize, Then Execute</h3>
+    <div class="g2" style="margin-top:14px">
+      <div style="padding:12px;background:var(--blue-light);border-radius:var(--r-sm)">
+        <div class="label label-key">Type 1</div><strong>Treatment Selection</strong>
+        <p class="text-sm text-muted">Given a design goal, choose the best process. <em>Key: map goal → mechanism → process.</em></p>
+      </div>
+      <div style="padding:12px;background:var(--green-light);border-radius:var(--r-sm)">
+        <div class="label" style="background:var(--green-light);color:var(--green)">Type 2</div><strong>Structure Prediction</strong>
+        <p class="text-sm text-muted">Given a cooling rate or temperature, predict microstructure. <em>Key: use TTT logic.</em></p>
+      </div>
+      <div style="padding:12px;background:var(--yellow-light);border-radius:var(--r-sm)">
+        <div class="label label-caution">Type 3</div><strong>Property Tradeoff</strong>
+        <p class="text-sm text-muted">One change improves X but hurts Y. <em>Key: identify the binding constraint.</em></p>
+      </div>
+      <div style="padding:12px;background:var(--red-light);border-radius:var(--r-sm)">
+        <div class="label label-trap">Type 4</div><strong>Failure Diagnosis</strong>
+        <p class="text-sm text-muted">Given evidence, identify mechanism. <em>Key: use clue elimination, not pattern matching.</em></p>
+      </div>
+      <div style="padding:12px;background:var(--purple-light);border-radius:var(--r-sm)">
+        <div class="label label-lens">Type 5</div><strong>Mitigation Strategy</strong>
+        <p class="text-sm text-muted">Given a failure mode, choose the minimum effective fix. <em>Key: fix the cause, not the symptom.</em></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 2 — CONCEPT ARCHITECTURE
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="sec-title">Concept Architecture</div>
+  <div class="sec-sub">The systems-thinking map that unlocks all heat treatment and failure questions.</div>
+  <div class="sec-rule"></div>
+
+  <!-- Flow chain -->
+  <div class="card card-blue">
+    <h3>The Engineering Reasoning Chain</h3>
+    <p>Every PE material question lives somewhere on this chain. The question hides the answer inside a linkage between two or more nodes.</p>
+    <div class="flow-chain" style="margin-top:16px">
+      <div class="flow-node fn-process">Processing /<br>Heat Treatment</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-micro">Microstructure</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-prop">Mechanical<br>Properties</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-service">Service<br>Behavior</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-fail">Failure<br>Risk</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-design">Design<br>Decision</div>
+    </div>
+    <div class="callout-blue callout mt16">Heat treatment changes <strong>microstructure, not composition</strong>. The same steel can be hard as glass or soft as mild steel depending solely on thermal history. This is the foundational insight.</div>
+  </div>
+
+  <!-- Interactive chain explorer -->
+  <div class="card mt16">
+    <h3>Chain Explorer — Click a Node to Understand Its Role</h3>
+    <div class="flex-center" style="gap:12px;margin:16px 0;flex-wrap:wrap">
+      <button class="btn btn-outline" onclick="chainExplore('process')">⚙️ Processing</button>
+      <button class="btn btn-outline" onclick="chainExplore('micro')">🔬 Microstructure</button>
+      <button class="btn btn-outline" onclick="chainExplore('prop')">⚡ Properties</button>
+      <button class="btn btn-outline" onclick="chainExplore('service')">🔧 Service</button>
+      <button class="btn btn-outline" onclick="chainExplore('fail')">💥 Failure</button>
+      <button class="btn btn-outline" onclick="chainExplore('design')">📐 Design</button>
+    </div>
+    <div id="chain-result" style="display:none" class="callout-blue callout"></div>
+  </div>
+
+  <!-- Deep linkages -->
+  <div class="g2 mt16">
+    <div class="card card-blue">
+      <h4>Why Treatment Doesn't Change Composition</h4>
+      <p>Austenitizing, quenching, and tempering rearrange carbon atoms within the iron crystal lattice — forming martensite, bainite, or pearlite — but do not add or remove carbon. The steel grade sets your ceiling. The treatment controls where within that range you land.</p>
+      <div class="lens-box">A 4340 steel quenched to 58 HRC and a 4340 steel normalized to 28 HRC are chemically identical. The hardness difference is 100% microstructural.</div>
+    </div>
+    <div class="card card-yellow">
+      <h4>Why Failure Clues Point Back to Process History</h4>
+      <p>A component that was overtempered has lower hardness than specified — but its microstructure looks like tempered martensite. A component that wasn't tempered shows high hardness but catastrophic brittleness. The fracture surface and hardness data together reconstruct the thermal history.</p>
+      <div class="clue-box">Sudden brittle fracture at low load in a component that passed hardness inspection → under-tempered or untempered martensite, not a material defect.</div>
+    </div>
+  </div>
+
+  <div class="g2 mt8">
+    <div class="card card-green">
+      <h4>Why Microstructure Controls Everything</h4>
+      <ul class="eng">
+        <li><strong>Grain boundaries</strong> → barrier to dislocation motion → higher strength in fine grain</li>
+        <li><strong>Carbide morphology</strong> → spheroidite = machinable; plate-like pearlite = harder</li>
+        <li><strong>Martensite needle density</strong> → harder = more brittle (less tempered)</li>
+        <li><strong>Retained austenite</strong> → dimensional instability, softening over time</li>
+        <li><strong>Bainite morphology</strong> → upper = lower strength; lower = better toughness</li>
+      </ul>
+    </div>
+    <div class="card card-red">
+      <h4>Why the Right Answer Hides in Tradeoffs</h4>
+      <ul class="eng">
+        <li>Fine grain → ↑ strength AND ↑ toughness, but ↓ creep resistance</li>
+        <li>Tempering → ↑ toughness, ↓ hardness → the question gives you one constraint</li>
+        <li>High hardenability → enables slow quench → ↓ distortion → ↓ residual stress</li>
+        <li>Carburizing → ↑ surface hardness → ↑ fatigue life — but can introduce H₂ risk</li>
+        <li>Austempering → avoids martensite → ↓ distortion — but limits section thickness</li>
+      </ul>
+      <div class="trap-box">The distractor is always "maximize the primary property." The correct answer maximizes it while satisfying the hidden constraint.</div>
+    </div>
+  </div>
+
+  <!-- Accordion: Key Principles -->
+  <div class="mt16">
+    <h3 style="margin-bottom:12px">Core Engineering Principles</h3>
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">Principle 1: Hardenability vs Hardness <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <p><strong>Hardenability</strong> is the ability of a steel to harden throughout its section when quenched. <strong>Hardness</strong> is the measured surface value. A steel with low hardenability can have excellent surface hardness but a soft, pearlitic core — making the hardness data misleading for design of thick sections.</p>
+        <p>Plain carbon steels have low hardenability. Alloy steels with Cr, Mo, Mn, Ni shift the TTT curve right — allowing slower quench rates to still produce martensite throughout the section.</p>
+        <div class="trap-box">Question says "achieved 60 HRC surface hardness" — doesn't mean the core is martensitic. Section size matters enormously.</div>
+      </div>
+    </div>
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">Principle 2: Carbon Equivalent and Weldability <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <p>Higher carbon content and alloying raise <strong>carbon equivalent (CE)</strong>, which reduces weldability and increases the risk of heat-affected zone (HAZ) hardening and cracking. The HAZ undergoes a local quench cycle during welding, forming hard, brittle martensite if CE is high and cooling is rapid.</p>
+        <p>Preheating before welding slows the HAZ cooling rate, reducing the risk of martensite formation and hydrogen-induced cracking. Post-weld heat treatment (PWHT) stress-relieves the weld and tempers any martensite formed.</p>
+      </div>
+    </div>
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">Principle 3: Fatigue Initiates at Surfaces and Defects <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <p>Fatigue cracks nucleate at <strong>stress concentrations</strong>: surface scratches, tool marks, sharp radii, inclusions, pits, and weld toes. Residual tensile stresses amplify this. Case hardening processes (carburizing, nitriding) introduce <strong>residual compressive stresses</strong> at the surface, which must be overcome before a fatigue crack can nucleate — dramatically increasing fatigue life.</p>
+        <div class="lens-box">A component failed by fatigue despite adequate yield strength → look for surface condition, stress concentrations, or residual tensile stress from prior processing.</div>
+      </div>
+    </div>
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">Principle 4: DBTT and BCC vs FCC Structures <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <p><strong>BCC metals</strong> (ferritic steels, ferritic stainless) exhibit a <strong>ductile-to-brittle transition temperature (DBTT)</strong>. Below this temperature, they fracture in a brittle cleavage mode with minimal energy absorption. <strong>FCC metals</strong> (austenitic stainless, aluminum, copper) remain ductile down to cryogenic temperatures — no DBTT.</p>
+        <p>Fine grain size lowers the DBTT, making fine-grained BCC steels better choices for low-temperature applications. Embrittlement mechanisms (temper, 475°C, hydrogen) raise the DBTT.</p>
+        <div class="trap-box">A question about cryogenic service that offers "carbon steel" vs "austenitic stainless" — the answer is almost always austenitic stainless due to FCC structure and absence of DBTT.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 3 — HEAT TREATMENT STUDIO
+══════════════════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="sec-title">Heat Treatment Studio</div>
+  <div class="sec-sub">Advanced treatment comparison — purpose, mechanism, outcome, risks, and PE-style application logic.</div>
+  <div class="sec-rule"></div>
+
+  <div class="tab-strip" id="ht-tabs">
+    <button class="tab-pill active" onclick="switchTab('ht','thermal')">Thermal Treatments</button>
+    <button class="tab-pill" onclick="switchTab('ht','surface')">Surface / Diffusion</button>
+    <button class="tab-pill" onclick="switchTab('ht','interrupted')">Interrupted Quench</button>
+    <button class="tab-pill" onclick="switchTab('ht','compare')">Comparison Matrix</button>
+    <button class="tab-pill" onclick="switchTab('ht','selector')">Treatment Selector</button>
+  </div>
+
+  <!-- Thermal Treatments -->
+  <div class="tab-pane active" id="ht-thermal">
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">🔥 Full Annealing <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <div class="g2">
+          <div>
+            <h5>Mechanism</h5>
+            <p>Austenitize above Ac₃ (hypoeutectoid) or Ac₁ (hypereutectoid), then <strong>furnace cool</strong> — extremely slow. Recrystallization, grain growth, and complete carbide dissolution and reprecipitation occur.</p>
+            <h5 class="mt8">Microstructure Outcome</h5>
+            <p>Coarse <strong>lamellar pearlite</strong> + proeutectoid phase. Maximum softness for that steel grade.</p>
+            <h5 class="mt8">Primary Purpose</h5>
+            <ul class="eng"><li>Maximum softness for machining</li><li>Stress relief (fully)</li><li>Restore ductility after cold work</li></ul>
+          </div>
+          <div>
+            <h5>Properties</h5>
+            <div class="matrix"><table><tr><td>Hardness</td><td>Very Low</td></tr><tr><td>Ductility</td><td>Maximum</td></tr><tr><td>Machinability</td><td>Excellent</td></tr><tr><td>Strength</td><td>Minimum</td></tr><tr><td>Residual Stress</td><td>Minimum</td></tr></table></div>
+          </div>
+        </div>
+        <h5 class="mt8">When Preferred</h5>
+        <p>Before heavy machining operations. After severe forming to restore formability. Not for final product — properties too low for structural service.</p>
+        <div class="trap-box">Annealing is confused with normalizing. Both involve austenitizing, but annealing uses furnace cooling (slow) — normalizing uses air cooling (faster). Normalizing gives finer, harder pearlite.</div>
+        <div class="lens-box">PE question clue: "maximize machinability before final hardening" → full anneal or process anneal (spheroidize for high-carbon steels).</div>
+        <h5 class="mt8">What Students Confuse It With</h5>
+        <p><strong>Normalizing:</strong> Air cool, not furnace cool → harder/finer pearlite. <strong>Stress relieving:</strong> Below Ac₁ → no austenitizing, no phase change, only stress reduction.</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">⚡ Normalizing <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <div class="g2">
+          <div>
+            <h5>Mechanism</h5>
+            <p>Austenitize above Ac₃ (complete dissolution), then <strong>air cool</strong> in still air. Faster than furnace cool → finer pearlite formation.</p>
+            <h5 class="mt8">Microstructure Outcome</h5>
+            <p>Fine lamellar pearlite + proeutectoid phase. Refined grain structure. More uniform than as-cast or heavily worked steel.</p>
+            <h5 class="mt8">Primary Purpose</h5>
+            <ul class="eng"><li>Grain refinement for improved toughness</li><li>Homogenize as-cast segregation</li><li>Establish baseline microstructure</li><li>Improve machinability relative to hot-rolled condition</li></ul>
+          </div>
+          <div>
+            <h5>Properties vs Anneal</h5>
+            <p>Higher hardness, yield strength, and tensile strength than full anneal. Lower ductility. Better toughness than coarse-grained anneal due to refined grain.</p>
+            <div class="callout-green callout"><strong>Key advantage:</strong> Grain refinement simultaneously improves strength AND toughness — unlike most property changes which trade one for the other.</div>
+          </div>
+        </div>
+        <div class="lens-box">Normalizing before quench-and-temper is common practice. It ensures uniform, fine austenite grain → better hardenability response and more uniform final microstructure.</div>
+        <div class="trap-box">"Normalizing increases strength" — TRUE, but don't confuse with hardening. The strength increase is modest. For structural hardness, normalizing alone is insufficient.</div>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">⭕ Spheroidizing <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <div class="g2">
+          <div>
+            <h5>Mechanism</h5>
+            <p>Heat at or just below Ac₁ for extended time (or cycled above/below Ac₁). Lamellar cementite breaks down into <strong>globular (spheroidal) carbides</strong> in a ferrite matrix — minimum surface energy configuration.</p>
+            <h5 class="mt8">Microstructure</h5>
+            <p>Spheroidite: rounded carbide particles in ferrite matrix. Maximum softness for <strong>high-carbon steels</strong> specifically.</p>
+          </div>
+          <div>
+            <h5>When to Use</h5>
+            <ul class="eng">
+              <li>Machining of <strong>high-carbon or tool steels</strong> (>0.6% C) — lamellar pearlite is too abrasive</li>
+              <li>Before cold forming high-carbon wire/strip</li>
+              <li>NOT for low-carbon steel — too soft, gummy, poor chip formation</li>
+            </ul>
+            <div class="trap-box">Spheroidizing is NOT the best choice for low-carbon steel machinability — for those, use normalizing or cold drawing for free-machining characteristics.</div>
+          </div>
+        </div>
+        <div class="lens-box">PE trap: "tool steel needs machining before hardening → use annealing." Better answer for high-C tool steel is spheroidizing. Full anneal of tool steel gives coarse pearlite; spheroidize gives softer, more machinable spheroidite.</div>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">🌡️ Stress Relieving <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <div class="g2">
+          <div>
+            <h5>Mechanism</h5>
+            <p>Heat to <strong>below Ac₁</strong> (typically 550–650°C for steel) — no phase transformation occurs. Internal residual stresses relax by limited plastic flow and recovery. Hold, then slow cool.</p>
+            <h5 class="mt8">What Changes</h5>
+            <ul class="eng"><li>Residual stresses reduced substantially</li><li>Microstructure essentially unchanged</li><li>Slight reduction in yield strength possible</li><li>Hardness essentially unchanged</li></ul>
+          </div>
+          <div>
+            <h5>When to Use</h5>
+            <ul class="eng">
+              <li>After welding to prevent SCC and distortion in service</li>
+              <li>After machining precision components</li>
+              <li>After cold forming</li>
+              <li>When dimensional stability in service is critical</li>
+            </ul>
+            <div class="callout-yellow callout">Stress relieving does NOT significantly change mechanical properties. If you need to change properties, you need a different treatment.</div>
+          </div>
+        </div>
+        <div class="trap-box">Question says "reduce residual stresses after welding without significantly changing properties" → stress relieving. If it also says "refine grain" or "soften" → you need annealing or normalizing instead.</div>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">❄️ Quenching + Tempering <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <div class="g2">
+          <div>
+            <h5>Quenching Mechanism</h5>
+            <p>Austenitize → rapid cool below <strong>Ms</strong> temperature, bypassing the nose of the TTT curve. Carbon is trapped in FCC-to-BCT transformation → creates highly strained <strong>martensite</strong>. Maximum hardness but maximum brittleness.</p>
+            <h5 class="mt8">Tempering Mechanism</h5>
+            <p>Reheat as-quenched martensite to 150–650°C. Carbon precipitates out as fine <strong>ε-carbide</strong> then cementite; lattice distortion decreases. Result: <strong>tempered martensite</strong> — combination of strength and toughness.</p>
+          </div>
+          <div>
+            <h5>Tempering Temperature Effect</h5>
+            <table><tr><th>Temp</th><th>Hardness</th><th>Toughness</th></tr>
+            <tr><td>150°C</td><td>Very high</td><td>Low</td></tr>
+            <tr><td>300°C</td><td>High</td><td>Moderate</td></tr>
+            <tr><td>450°C</td><td>Medium-high</td><td>Good</td></tr>
+            <tr><td>600°C</td><td>Medium</td><td>Excellent</td></tr>
+            </table>
+            <div class="callout-yellow callout">Temper at 250–350°C for Cr-Mo steels may cause <strong>tempered martensite embrittlement (TME)</strong>. Avoid this range for alloy steels.</div>
+          </div>
+        </div>
+        <div class="lens-box">The PE question often asks: "What is the MINIMUM tempering treatment?" Answer: always temper immediately after quenching, even at low temperature. Untempered martensite will crack under its own residual stresses or during handling.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Surface Treatments -->
+  <div class="tab-pane" id="ht-surface">
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">🔩 Carburizing <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <div class="g2">
+          <div>
+            <h5>Mechanism</h5>
+            <p>Heat low-carbon steel in <strong>carbon-rich atmosphere</strong> (gas, pack, or vacuum) at 850–950°C. Carbon diffuses into surface, creating a carbon gradient. Then quench + temper.</p>
+            <h5 class="mt8">Result</h5>
+            <p>Hard, high-carbon martensite case + tough, low-carbon core. Residual compressive stresses at surface. Excellent fatigue and wear resistance.</p>
+          </div>
+          <div>
+            <h5>Key Design Scenarios</h5>
+            <ul class="eng">
+              <li>Gear teeth: hard surface for wear + tough core for impact</li>
+              <li>Bearing races: hard surface, fatigue-resistant</li>
+              <li>Case depth controllable by time/temperature</li>
+            </ul>
+            <div class="trap-box">Carburizing requires LOW-carbon base steel. Using high-carbon steel defeats the purpose — the core will also be hard/brittle.</div>
+          </div>
+        </div>
+        <div class="lens-box">PE scenario: "gear shaft needs hard surface for wear resistance AND tough core for torsional loads" → carburizing a low-carbon alloy steel (e.g., 8620) is the classic answer.</div>
+        <h5 class="mt8">Confusion with Nitriding</h5>
+        <p>Carburizing: higher temperature, thicker case, requires quench. Nitriding: lower temperature (500–550°C), thinner but very hard case, NO QUENCH required (less distortion), only on specific steels (Al, Cr containing).</p>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">⚗️ Nitriding <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <div class="g2">
+          <div>
+            <h5>Mechanism</h5>
+            <p>Expose finished, hardened steel to nitrogen atmosphere at 500–550°C (below tempering temperature). Nitrogen diffuses into surface, forming extremely hard nitride compounds (Fe₂N, Fe₄N, AlN, CrN).</p>
+            <h5 class="mt8">Critical Distinction</h5>
+            <ul class="eng">
+              <li><strong>No quench required</strong> after nitriding</li>
+              <li>Performed on ALREADY heat-treated (Q&T) steel</li>
+              <li>Lower distortion than carburizing</li>
+              <li>Very hard case (up to ~70 HRC equivalent)</li>
+              <li>Thin case (0.05–0.75 mm)</li>
+            </ul>
+          </div>
+          <div>
+            <h5>Steel Requirements</h5>
+            <p>Nitriding requires steel with <strong>nitride-forming elements</strong>: Al, Cr, Mo, V. Plain carbon steels respond poorly. Nitralloy (Al-containing) and Cr-Mo steels are classic choices.</p>
+            <div class="callout-green callout"><strong>Best for:</strong> Precision parts requiring tight dimensional tolerances (crankshafts, gears, precision dies) — because the low temperature and no-quench minimizes distortion.</div>
+          </div>
+        </div>
+        <div class="trap-box">PE trap: "hard surface, minimal distortion, on finished machined part" → nitriding. The trap is to choose carburizing (which produces more distortion and requires quench/dimensional correction afterward).</div>
+      </div>
+    </div>
+
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">⚡ Induction Hardening <span class="acc-icon">▾</span></div>
+      <div class="acc-body">
+        <div class="g2">
+          <div>
+            <h5>Mechanism</h5>
+            <p>Electromagnetic induction heats only the <strong>surface layer</strong> of a medium-carbon steel part (0.4–0.7% C) rapidly to above Ac₃. Immediate quench hardens only the heated zone. Core never reaches transformation temperature — retains original (normalized/Q&T) microstructure.</p>
+          </div>
+          <div>
+            <h5>Advantages</h5>
+            <ul class="eng">
+              <li>Selective hardening of specific zones (gear teeth, journal surfaces)</li>
+              <li>Fast cycle time — production efficient</li>
+              <li>Controllable case depth via frequency selection</li>
+              <li>Residual compressive stresses improve fatigue life</li>
+            </ul>
+          </div>
+        </div>
+        <div class="lens-box">Induction hardening requires <strong>medium-to-high carbon steel</strong>. Using it on low-carbon steel will not produce martensite — insufficient carbon. This is a common PE distractor.</div>
+        <div class="trap-box">Induction hardening vs carburizing: Induction hardening is applied to parts that already have adequate carbon at the surface. Carburizing adds carbon to low-carbon steel first.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interrupted Quench -->
+  <div class="tab-pane" id="ht-interrupted">
+    <div class="g2">
+      <div class="card card-blue">
+        <h4>Austempering</h4>
+        <p><strong>Process:</strong> Austenitize → quench to temperature <em>above</em> Ms → hold isothermally until bainite transformation completes → air cool.</p>
+        <p><strong>Result:</strong> Lower bainite (when held just above Ms) or upper bainite. No martensite. No tempering required.</p>
+        <h5 class="mt8">Advantages</h5>
+        <ul class="eng">
+          <li>Excellent combination of strength and toughness (better than martensite at same hardness)</li>
+          <li>Lower distortion than martensite quenching (smaller volume change)</li>
+          <li>No quench cracking risk (no rapid martensitic transformation)</li>
+          <li>No tempering step needed</li>
+        </ul>
+        <h5 class="mt8">Limitation</h5>
+        <ul class="eng"><li>Only works for sections where heat can be extracted fast enough to bypass the pearlite nose — limits section thickness</li><li>Requires highly hardenable alloy steel for thick sections</li></ul>
+        <div class="trap-box">Austempering does NOT produce martensite. If the question requires maximum hardness, martensite Q&T may be better despite higher distortion risk.</div>
+      </div>
+      <div class="card card-purple">
+        <h4>Martempering (Marquenching)</h4>
+        <p><strong>Process:</strong> Austenitize → quench into salt bath or oil at temperature just above or at Ms → hold until temperature equalizes throughout section → air cool through Ms.</p>
+        <p><strong>Result:</strong> Martensite, but with reduced thermal gradients during transformation → MUST still temper afterward.</p>
+        <h5 class="mt8">Advantage vs Conventional Quench</h5>
+        <ul class="eng">
+          <li>Temperature equalization BEFORE martensite forms → <strong>uniform transformation throughout section</strong></li>
+          <li>Dramatically reduced residual stresses</li>
+          <li>Reduced distortion</li>
+          <li>Reduced quench cracking</li>
+        </ul>
+        <h5 class="mt8">Limitation</h5>
+        <p>Still requires tempering. Slower effective cooling rate than direct water quench — requires hardenable steel.</p>
+        <div class="lens-box">Key distinction: Martempering → martensite + temper. Austempering → bainite, no temper. The PE question often requires you to know which produces martensite and which doesn't.</div>
+      </div>
+    </div>
+
+    <!-- Decision exercise -->
+    <div class="card mt16 card-yellow">
+      <h4>⚙️ Treatment Decision Exercise: Which Interrupted Quench?</h4>
+      <p><em>A medium-section gear (25mm effective diameter) in 4340 steel must achieve 45–48 HRC with minimum distortion. The component has complex geometry with thin and thick sections.</em></p>
+      <div class="flex" id="iq-opts" style="margin-top:12px">
+        <button class="btn btn-outline" onclick="iqSelect(this,'martemper','iq-result')">A. Martempering + temper</button>
+        <button class="btn btn-outline" onclick="iqSelect(this,'austemper','iq-result')">B. Austempering</button>
+        <button class="btn btn-outline" onclick="iqSelect(this,'direct','iq-result')">C. Direct water quench + temper</button>
+        <button class="btn btn-outline" onclick="iqSelect(this,'air','iq-result')">D. Air quench + temper</button>
+      </div>
+      <div id="iq-result" class="callout-blue callout mt8" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- Comparison Matrix -->
+  <div class="tab-pane" id="ht-compare">
+    <h3 class="mb8">Heat Treatment Comparison Matrix</h3>
+    <p class="text-muted mb16">Use this to identify the most defensible treatment given a set of design constraints.</p>
+    <div class="matrix">
+      <table>
+        <tr><th>Treatment</th><th>Hardness Achieved</th><th>Toughness</th><th>Distortion Risk</th><th>Residual Stress</th><th>Surface Only?</th><th>Best For</th></tr>
+        <tr><td>Full Anneal</td><td>Minimum</td><td>High</td><td>Very Low</td><td>Minimum</td><td>No</td><td>Pre-machining softening</td></tr>
+        <tr><td>Normalizing</td><td>Low-Medium</td><td>Good</td><td>Low</td><td>Low</td><td>No</td><td>Grain refinement, uniform baseline</td></tr>
+        <tr><td>Spheroidizing</td><td>Minimum (high-C)</td><td>High</td><td>Very Low</td><td>Minimum</td><td>No</td><td>Machining high-C / tool steels</td></tr>
+        <tr><td>Stress Relieving</td><td>Unchanged</td><td>Unchanged</td><td>Very Low</td><td>Greatly reduced</td><td>No</td><td>Post-weld, post-machine</td></tr>
+        <tr><td>Q&amp;T (Martensite)</td><td>Maximum</td><td>Variable with temper temp</td><td>High</td><td>High (tensile)</td><td>No</td><td>High-strength structural parts</td></tr>
+        <tr><td>Austempering</td><td>Medium-high (bainite)</td><td>Excellent</td><td>Low</td><td>Low</td><td>No</td><td>Springs, thin-to-medium sections</td></tr>
+        <tr><td>Martempering</td><td>High (martensite)</td><td>Good after temper</td><td>Low-Medium</td><td>Reduced vs direct quench</td><td>No</td><td>Complex geometry, alloy steels</td></tr>
+        <tr><td>Carburizing</td><td>Very High (surface)</td><td>Tough core</td><td>Medium</td><td>Compressive (surface)</td><td>Yes</td><td>Gear teeth, bearings, wear surfaces</td></tr>
+        <tr><td>Nitriding</td><td>Extremely High (surface)</td><td>Tough core</td><td>Very Low</td><td>Compressive (surface)</td><td>Yes</td><td>Precision parts, crankshafts</td></tr>
+        <tr><td>Induction Hardening</td><td>High (surface)</td><td>Tough core</td><td>Low-Medium</td><td>Compressive (surface)</td><td>Yes</td><td>Selective zones on med-C steel</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Treatment Selector -->
+  <div class="tab-pane" id="ht-selector">
+    <div class="card">
+      <h3 class="mb8">🎯 Treatment Goal Selector</h3>
+      <p class="text-muted">Select your primary design goal to see the recommended treatment chain and reasoning.</p>
+      <div class="flex" style="gap:8px;flex-wrap:wrap;margin:14px 0" id="goal-btns">
+        <button class="btn btn-outline btn-sm" onclick="treatGoal(this,'macro')">Max machinability</button>
+        <button class="btn btn-outline btn-sm" onclick="treatGoal(this,'wear')">Surface wear resistance</button>
+        <button class="btn btn-outline btn-sm" onclick="treatGoal(this,'fatigue')">Fatigue life</button>
+        <button class="btn btn-outline btn-sm" onclick="treatGoal(this,'tough')">Impact toughness</button>
+        <button class="btn btn-outline btn-sm" onclick="treatGoal(this,'distortion')">Minimize distortion</button>
+        <button class="btn btn-outline btn-sm" onclick="treatGoal(this,'stress')">Reduce residual stress</button>
+        <button class="btn btn-outline btn-sm" onclick="treatGoal(this,'precision')">Precision dimensions</button>
+        <button class="btn btn-outline btn-sm" onclick="treatGoal(this,'core')">Hard surface + tough core</button>
+      </div>
+      <div id="goal-result" class="callout-blue callout" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+
+<!-- Sections 4-12 coming in Part 2 -->
+<footer style="background:#0f1117;color:rgba(244,243,239,.6);padding:20px 24px;text-align:center;font-size:.78rem;margin-top:40px">
+  <div style="font-size:.95rem;font-weight:700;color:#f4f3ef;margin-bottom:4px">PE Mechanical: Heat Treatment &amp; Material Failure Deep Mastery Lab — Part 1</div>
+  <div>Curriculum Developed &amp; Designed by <strong style="color:#d4a800">Hilary Homaii</strong></div>
+  <div style="margin-top:6px;opacity:.5">Sections 1–3 of 12 | Start Here · Concept Architecture · Heat Treatment Studio</div>
+</footer>
+
+<script>
+let visitedSections = new Set([1]);
+
+function nav(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+  visitedSections.add(parseInt(id.replace('s','')));
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateProgress() {
+  const pct = Math.round(visitedSections.size / 12 * 100);
+  const fill = document.getElementById('pt-fill');
+  const label = document.getElementById('pt-label');
+  if (fill) fill.style.width = pct + '%';
+  if (label) label.textContent = visitedSections.size + ' / 12 modules';
+}
+
+function switchTab(prefix, paneId) {
+  const strip = document.getElementById(prefix + '-tabs');
+  if (!strip) return;
+  strip.querySelectorAll('.tab-pill').forEach(p => p.classList.remove('active'));
+  strip.querySelectorAll('.tab-pill').forEach(p => {
+    if (p.getAttribute('onclick') && p.getAttribute('onclick').includes(paneId)) p.classList.add('active');
+  });
+  const target = document.getElementById(paneId);
+  if (!target) return;
+  target.parentElement.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  target.classList.add('active');
+}
+
+function toggleAcc(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+const Q_TYPE_DATA = {
+  treatment:"TREATMENT SELECTION: Scan for the binding design objective. Map: goal → required microstructure → treatment that produces it. Trap: choosing based on common use rather than whether it matches the specific objective.",
+  structure:"STRUCTURE PREDICTION: Convert the thermal history to TTT/CCT language. Did cooling bypass the nose? Was temperature above Ms? Trace the actual thermal path — don't pattern-match names to structures.",
+  tradeoff:"PROPERTY TRADEOFF: Identify the binding constraint first. The correct answer maximizes the primary property only as far as the constraint allows. Classic: hardness vs toughness, strength vs ductility, distortion vs maximum hardness.",
+  diagnosis:"FAILURE DIAGNOSIS: Use clue elimination, not pattern matching. Fracture surface morphology + location + environment + process history → eliminate mechanisms that require absent conditions.",
+  mitigation:"MITIGATION STRATEGY: Fix the cause, not the symptom. If fatigue at a stress concentration → remove the concentration. Minimum effective change is always preferred over wholesale redesign."
+};
+
+const CHAIN_DATA = {
+  process:"Processing and heat treatment are the engineer's primary levers. They determine thermal history, which drives every downstream property. The question 'which process?' is answered by working forward from the desired final properties.",
+  micro:"Microstructure is the critical intermediate — it determines all mechanical behavior. The same composition can be soft, hard, tough, or brittle depending solely on microstructure. When a question gives you a treatment, translate it immediately to a likely microstructure.",
+  prop:"Mechanical properties are measurable outputs: hardness, UTS, yield strength, ductility, toughness, fatigue limit, creep rate. These exist in tradeoff relationships — higher strength often trades against toughness.",
+  service:"Service behavior depends on loading type (static, cyclic, sustained), temperature, environment, and geometry. The same microstructure performs differently in fatigue versus static loading.",
+  fail:"Failure analysis reads backwards through the chain. Fracture surface morphology, crack location, hardness distribution, and service history reconstruct the failure path.",
+  design:"Design decisions close the loop. Given a failure or constraint, select the minimum effective change — often a treatment modification, not a material change."
+};
+
+const IQ_RESULTS = {
+  martemper:{cl:"green",text:"✅ CORRECT — Martempering + temper. 4340 has high hardenability — salt bath equalizes temperature throughout section before martensite forms → dramatically reduced distortion on complex geometry with keyways. Still achieves full martensite, still requires temper to target HRC. Best defensible choice."},
+  austemper:{cl:"red",text:"❌ Not optimal. Austempering produces bainite, not martensite. Achieving 45–48 HRC isothermally requires holding at temperatures where bainite hardness may not reach the spec, and hold times become impractical for 25mm section in 4340 without very precise bath control."},
+  direct:{cl:"red",text:"❌ High risk. Direct water quench on complex geometry with keyways = steep thermal gradients → excessive distortion and high quench crack risk. 4340 has enough hardenability for salt bath or oil — water quench is unnecessary and dangerous here."},
+  air:{cl:"red",text:"❌ Insufficient. Air quench on 4340 at 25mm may form bainite or pearlite at the core — not reliable for achieving 45–48 HRC throughout. Air hardening is for tool steels (D2, A2) with specific alloy compositions, not 4340."},
+};
+
+const TREATMENT_GOALS = {
+  macro:{title:"Maximize machinability",treatment:"Full anneal (low/medium-C) or Spheroidize (high-C tool steel)",chain:"Anneal → coarse pearlite or spheroidite → max softness → best chip formation",trap:"Spheroidizing for low-C steel = wrong. Produces gummy non-machinable structure. Spheroidize only for >0.6%C steels."},
+  wear:{title:"Surface wear resistance",treatment:"Carburize (low-C) or Nitride (alloy steel) or Induction harden (med-C)",chain:"Surface treatment → hard case (martensite or nitrides) → wear resistance",trap:"Through-hardening for wear ignores core toughness requirement."},
+  fatigue:{title:"Fatigue life",treatment:"Case hardening (carburize or nitride) → compressive residual stress + smooth surface finish",chain:"Surface compression → must overcome tension before crack nucleates → extended fatigue life",trap:"High strength alone does not improve fatigue if surface condition is poor or stress concentrations exist."},
+  tough:{title:"Impact toughness",treatment:"Normalize (grain refine) then Q&T at high temper temperature (550–650°C)",chain:"Fine grain + high-temper martensite → maximizes toughness at cost of hardness",trap:"Full anneal maximizes ductility but not toughness. Normalizing does more for toughness."},
+  distortion:{title:"Minimize distortion",treatment:"Austempering (bainite) or Martempering. Use air-hardening steel or polymer quench.",chain:"Slow/equalized cooling → reduced gradients → less differential expansion → less distortion",trap:"Slow quench alone insufficient. Martempering equalizes temperature before transformation begins."},
+  stress:{title:"Reduce residual stress",treatment:"Stress relieving at 550–650°C (below Ac₁). PWHT after welding.",chain:"Thermal energy → dislocations rearrange → stress relaxes → no phase change",trap:"Full anneal removes stress but changes microstructure. Use stress relief when properties must be preserved."},
+  precision:{title:"Precision dimensional tolerances",treatment:"Nitriding — no quench, minimal dimensional change, on already-finished parts.",chain:"Low temperature → no phase transformation → minimal distortion → tight tolerance maintained",trap:"Carburizing + quenching causes dimensional change requiring finishing stock allowance."},
+  core:{title:"Hard surface + tough core",treatment:"Carburize (low-C steel) → quench → temper. Or induction harden (med-C steel).",chain:"Low-C core (tough) + high-C case (hard martensite) → dual-property design",trap:"Starting with high-C steel defeats the purpose — core becomes brittle too."},
+};
+
+function qTypeSelect(btn, type) {
+  document.querySelectorAll('#q-type-btns .btn').forEach(b => b.classList.remove('btn-primary'));
+  btn.classList.add('btn-primary');
+  const div = document.getElementById('q-type-result');
+  div.className = 'callout callout-purple';
+  div.innerHTML = Q_TYPE_DATA[type];
+  div.style.display = 'block';
+}
+
+function chainExplore(node) {
+  const div = document.getElementById('chain-result');
+  div.innerHTML = CHAIN_DATA[node];
+  div.style.display = 'block';
+}
+
+function iqSelect(btn, choice, resultId) {
+  document.querySelectorAll('#iq-opts .btn').forEach(b => b.classList.remove('btn-primary','btn-red','btn-green'));
+  const r = IQ_RESULTS[choice];
+  btn.className = 'btn btn-sm btn-' + r.cl;
+  const div = document.getElementById(resultId);
+  div.className = 'callout callout-' + (r.cl === 'green' ? 'green' : 'red');
+  div.innerHTML = r.text;
+  div.style.display = 'block';
+}
+
+function treatGoal(btn, goal) {
+  document.querySelectorAll('#goal-btns .btn').forEach(b => b.classList.remove('btn-primary'));
+  btn.classList.add('btn-primary');
+  const g = TREATMENT_GOALS[goal];
+  const div = document.getElementById('goal-result');
+  div.innerHTML = `<strong>${g.title}</strong><br>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.82rem;color:var(--purple);margin:6px 0">🔗 ${g.chain}</div>
+    <strong>Best Treatment:</strong> ${g.treatment}
+    <div class="trap-box" style="margin-top:8px">${g.trap}</div>`;
+  div.style.display = 'block';
+}
+</script>
+</body>
+</html>
